@@ -24,10 +24,10 @@ def get_hashtag(filename):
             hashtag.append(a_hashtag.split()[0])
     return hashtag
 
-consumer_key = 'T1f4UwjW41mGvoDmTLJxhSTYy'
-consumer_secret = '6QCnP50CS6x3Bur454VEfRZ1qLTmA8QZnEYOS8ilaE9uzmFUvA'
-access_token = '1354714314876350465-uYOGMqVmgZrggRuoAIYPtdy4ThqULq'
-access_secret = 'yoiTM4yKugHnSYGwB9KXlvZcyAT9ifBzwrHMMRu0QZbio'
+consumer_key = ''
+consumer_secret = ''
+access_token = ''
+access_secret = ''
 tweetsPerQry = 100
 maxTweets = 1000000
 hashtag = get_hashtag('/home/pi/Twitter/hashtags.txt')  # read hashtags
