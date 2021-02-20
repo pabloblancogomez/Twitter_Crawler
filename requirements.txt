@@ -1,0 +1,10 @@
+tweepy
+#csv
+time
+collections
+nltk
+numpy
+pandas
+Pillow
+wordcloud
+matplotlib.pyplot
