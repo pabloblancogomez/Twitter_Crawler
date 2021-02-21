@@ -9,8 +9,8 @@ from nltk.corpus import stopwords
 from collections import Counter
 from nltk import WordNetLemmatizer
 from nltk.tokenize.toktok import ToktokTokenizer
-#import numpy as np
-#import pandas as pd
+import numpy as np
+import pandas as pd
 from PIL import Image
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
 import matplotlib.pyplot as plt
@@ -24,12 +24,18 @@ def get_hashtag(filename):
             hashtag.append(a_hashtag.split()[0])
     return hashtag
 
-consumer_key = ''
-consumer_secret = ''
-access_token = ''
-access_secret = ''
+def listToString(s):  
+    # initialize an empty string 
+    str1 = " " 
+    # return string   
+    return (str1.join(s)) 
+
+consumer_key = 'T1f4UwjW41mGvoDmTLJxhSTYy'
+consumer_secret = '6QCnP50CS6x3Bur454VEfRZ1qLTmA8QZnEYOS8ilaE9uzmFUvA'
+access_token = '1354714314876350465-uYOGMqVmgZrggRuoAIYPtdy4ThqULq'
+access_secret = 'yoiTM4yKugHnSYGwB9KXlvZcyAT9ifBzwrHMMRu0QZbio'
 tweetsPerQry = 100
-maxTweets = 1000000
+maxTweets = 100000
 hashtag = get_hashtag('/home/pi/Twitter/hashtags.txt')  # read hashtags
 
 authentication = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -61,7 +67,7 @@ with open('/home/pi/Twitter/registro_Tweets.csv', "w", newline='') as csv_file:
 					print(tweet.full_text.encode('utf-8'))
 					char1 = 'Status(full_text='
 					char2 = ', truncated'
-					mystr =tweet.full_text.encode('utf-8')
+					mystr =tweet.full_text
 					csv_add.writerow([tweet.created_at, hasht, tweet.id, mystr[mystr.find(char1)+1 : mystr.find(char2)]])
 					print("#####")
 		if not newTweets:
@@ -78,6 +84,8 @@ with open('/home/pi/Twitter/registro_Tweets.csv','r') as csvfile:
 	reader = csv.reader(csvfile,delimiter='|')
 	next(reader)
 	for row in reader:
+		if(len(row) < 2):
+			continue
 		csvwords = row[3].split(" ")
 		tokens=toktok.tokenize(csvwords)
 		# Remove the punctuations
@@ -92,7 +100,29 @@ with open('/home/pi/Twitter/registro_Tweets.csv','r') as csvfile:
 		tokens=[lemma.lemmatize(word, pos = "n") for word in tokens]
 		for i in tokens:
 			words.append(i)
+#print(words)
 print('Guardando palabras clave en archivo csv')
+with open('/home/pi/Twitter/grafico_palabras.csv', 'w', newline='') as g:
+	writer = csv.writer(g, dialect='unix', quotechar='"', quoting=csv.QUOTE_MINIMAL)	
+	for i in words:
+		writer.writerow([i])	
+print('Generando nube de palabras')
+cloud = []
+with open('/home/pi/Twitter/grafico_palabras.csv','r') as csvfile:
+	df = csv.reader(csvfile)
+	for row in df:
+		x = row[0]
+		cloud.append(x)
+	text = listToString(cloud)
+	# print(text)
+	# lower max_font_size, change the maximum number of word and lighten the background:
+	wordcloud = WordCloud(max_font_size=50, max_words=100, background_color="white").generate(text)
+	plt.figure()
+	plt.imshow(wordcloud, interpolation="bilinear")
+	plt.axis("off")
+	plt.show()
+	# Save the image in the img folder:
+	wordcloud.to_file("/home/pi/Twitter/img/Tweetcloud_plot.png")
 words2= []
 for i in words:	
 	if i not in words2:
@@ -105,17 +135,5 @@ for i in words2:
 with open('/home/pi/Twitter/frecuencia_palabras.csv', 'w', newline='') as f:
 	writer = csv.writer(f)	
 	writer.writerows(words_counted)
-print('Generando nube de palabras')
-with open('/home/pi/Twitter/registro_Tweets.csv','r') as csvfile:
-	df = csv.reader(csvfile,delimiter='|')
-	for row in reader:
-		text = row[3]
-	# lower max_font_size, change the maximum number of word and lighten the background:
-	wordcloud = WordCloud(max_font_size=50, max_words=100, background_color="white").generate(text)
-	plt.figure()
-	plt.imshow(wordcloud, interpolation="bilinear")
-	plt.axis("off")
-	plt.show()
-	# Save the image in the img folder:
-	wordcloud.to_file("/home/pi/Twitter/img/Tweetcloud_plot.png")
+
 print('Tarea finalizada')
