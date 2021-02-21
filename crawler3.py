@@ -30,10 +30,10 @@ def listToString(s):
     # return string   
     return (str1.join(s)) 
 
-consumer_key = 'T1f4UwjW41mGvoDmTLJxhSTYy'
-consumer_secret = '6QCnP50CS6x3Bur454VEfRZ1qLTmA8QZnEYOS8ilaE9uzmFUvA'
-access_token = '1354714314876350465-uYOGMqVmgZrggRuoAIYPtdy4ThqULq'
-access_secret = 'yoiTM4yKugHnSYGwB9KXlvZcyAT9ifBzwrHMMRu0QZbio'
+consumer_key = ''
+consumer_secret = ''
+access_token = ''
+access_secret = ''
 tweetsPerQry = 100
 maxTweets = 100000
 hashtag = get_hashtag('/home/pi/Twitter/hashtags.txt')  # read hashtags
@@ -135,5 +135,4 @@ for i in words2:
 with open('/home/pi/Twitter/frecuencia_palabras.csv', 'w', newline='') as f:
 	writer = csv.writer(f)	
 	writer.writerows(words_counted)
-
 print('Tarea finalizada')
